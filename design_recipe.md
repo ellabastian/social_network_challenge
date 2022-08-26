@@ -268,13 +268,12 @@ class PostRepository
 end
 
 
-
 9. Write Test Examples
 Write Ruby code that defines the expected behaviour of the Repository class, following your design from the table written in step 5.
 
 These examples will later be encoded as RSpec tests.
 
-# EXAMPLES
+# EXAMPLES for AccountRepository class
 
 # 1
 # Get all accounts
@@ -321,8 +320,8 @@ last_account = account.last
 last_account.email_address = 'ella@google.com'
 last_account.username = 'ellab'
 
-# 3
-# Create a new account
+# 4
+# Delete an account
 
 repo = AccountRepository.new
 
@@ -333,8 +332,90 @@ accounts.length = 1
 accounts.first.id = 2
 
 
-# Add more examples for each method
-Encode this example as a test.
+# EXAMPLES for PostRepository class
+
+# 1
+# Get all posts
+
+repo = PostRepository.new
+
+posts = repo.all
+
+expect(posts.length).to eq 2
+
+expect(posts[0].title).to eq 'A day in the life of..'
+expect(posts[0].content).to eq 'This is a diary of my day'
+expect(posts[0].views).to eq 600
+expect(posts[0].account_id).to eq 1
+
+expect(posts[1].title).to eq 'Favourite foods'
+expect(posts[1].name).to eq 'My favourite food is chocolate'
+expect(posts[1].cohort_name).to eq 1000
+expect(posts[1].cohort_name).to eq 2
+
+# 2
+# Get a single post
+
+repo = PostRepository.new
+
+post = repo.find(1)
+
+expect(post.title).to eq 'A day in the life of..'
+expect(post.content).to eq 'This is a diary of my day'
+expect(post.views).to eq 600
+expect(post.account_id).to eq 1
+
+# 3
+# Create a new post
+
+repo = PostRepository.new
+
+post = Post.new
+post.title = 'How to ride a bike'
+post.content = 'An explanation of how to ride a bike'
+post.views = 50
+post.account_id = 1
+
+repo.create(post)
+
+post = repo.all
+
+last_post = post.last
+expect(last_post.title).to eq 'How to ride a bike'
+expect(last_post.content).to eq 'An explanation of how to ride a bike'
+expect(last_post.views.to_i).to eq 50
+expect(last_post.account_id.to_i).to eq 1
+
+# 4
+# Delete an account
+
+repo = PostRepository.new
+
+repo.delete(1)
+
+posts = repo.all
+expect(posts.length).to eq 1
+expect(posts.first.id.to_i).to eq 2
+
+# 4
+# Update a post
+
+repo = PostRepository.new
+
+post = repo.post(2)
+
+post.title = 'Favourite foods and drinks'
+post.content = 'My favourite food is pizza'
+post.views = 100
+
+repo.update(post)
+
+updated_post = repo.find(2)
+
+expect(updated_post.title).to eq 'Favourite foods and drinks'
+expect(updated_post.content).to eq 'My favourite food is pizza'
+expect(updated_post.views).to eq 100
+expect(updated_post.account_id).to eq 2
 
 10. Reload the SQL seeds before each test run
 Running the SQL code present in the seed file will empty the table and re-insert the seed data.
